@@ -62,7 +62,7 @@ export class Scene extends Container {
 
         this.splash = new WobblyText(game, 'Lets start by rolling for your cargo!', 35, 400, 60, 0.2, 3, { shadow: 4, align: 'center', scales: true });
         this.secondLine = new WobblyText(game, '', 25, 400, 105, 0.2, 3, { shadow: 3, align: 'center', scales: true });
-        this.bigText = new WobblyText(game, '~ COUP AHOO ~', 80, 400, 150, 0.2, 3, { shadow: 6, align: 'center', scales: true });
+        this.bigText = new WobblyText(game, '~ Pirate ~', 80, 400, 150, 0.2, 3, { shadow: 6, align: 'center', scales: true });
         this.action = new ButtonEntity(game, 'ROLL', 800 - 100 - 10, 360, 200, 55, () => this.buttonPress(), game.audio, 20);
         this.yesButton = new ButtonEntity(game, '', 800 - 70 - 10, 360, 140, 55, () => this.answer(true), game.audio, 20);
         this.noButton = new ButtonEntity(game, '', 800 - 70 * 3 - 10 * 2, 360, 140, 55, () => this.answer(false), game.audio, 20);
