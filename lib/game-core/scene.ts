@@ -365,6 +365,15 @@ export class Scene extends Container {
     }
 
     private rollForDamage(): void {
+        // Enemy should always use client-side dice rolling, not Web3
+        if (!this.current.player) {
+            this.useDamageDice = true;
+            this.roll(this.current.getDiceCount());
+            setTimeout(() => this.promptForReroll('Would you like to roll again?', `The total is ${this.getDamage()}...`, () => this.shoot()), 500);
+            return;
+        }
+        
+        // Only use Web3 for player turns
         if (this.triggerWeb3Roll && this.isWalletConnected) {
             this.pendingRollType = 'damage';
             this.pendingRollAmount = this.current.getDiceCount();
@@ -394,9 +403,10 @@ export class Scene extends Container {
 
     private promptForReroll(first: string, second: string, after: () => void): void {
         if (!this.current.player) {
+            // Enemy AI logic: reroll if damage is less than number of dice (simple strategy)
             const dmg = this.getDamage();
             if (dmg < this.dice.length) {
-                // Set context for damage reroll
+                // Enemy decides to reroll
                 this.pendingRerollContext = 'damage';
                 this.pendingAfterAction = after;
                 this.reroll();
@@ -406,9 +416,12 @@ export class Scene extends Container {
                 }
                 return;
             }
+            // Enemy decides not to reroll, continue with action
             after();
+            this.dice = [];
             return;
         }
+        // Player prompt for reroll
         this.promptAnswerWith('ROLL', 'KEEP', first, second, () => {
             // Set context for damage reroll
             this.pendingRerollContext = 'damage';
