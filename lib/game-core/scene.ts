@@ -406,14 +406,11 @@ export class Scene extends Container {
             // Enemy AI logic: reroll if damage is less than number of dice (simple strategy)
             const dmg = this.getDamage();
             if (dmg < this.dice.length) {
-                // Enemy decides to reroll
-                this.pendingRerollContext = 'damage';
-                this.pendingAfterAction = after;
-                this.reroll();
-                // Only set timeout if NOT using Web3 (Web3 will handle continuation in processWeb3Reroll)
-                if (!this.triggerWeb3Roll || !this.isWalletConnected) {
-                    setTimeout(() => this.rerollOrAct(first, second, after), 750);
-                }
+                // Enemy decides to reroll - always use client-side for AI
+                this.current.openMouth();
+                [...this.dice, ...this.loot].forEach(l => l.reroll());
+                this.checkForBlankRepair();
+                setTimeout(() => this.rerollOrAct(first, second, after), 750);
                 return;
             }
             // Enemy decides not to reroll, continue with action
